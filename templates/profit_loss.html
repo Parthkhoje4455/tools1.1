@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profit Loss</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 500px;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            font-weight: 700;
+        }
+
+        .result-box {
+            background: #f1f8ff;
+            border: 1px solid #cfe2ff;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-wrap: anywhere;
+        }
+
+    #resultMessage {
+    font-size: 20px;
+    font-weight: 600;
+    white-space: pre-line;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card p-4 mx-auto">
+
+        <h1 class="text-center mb-4">Profit Loss</h1>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label for="play" class="form-label">Play</label>
+
+                <input
+                    type="number"
+                    id="play"
+                    name="play"
+                    class="form-control"
+                    placeholder="Enter Play amount"
+                    min="0"
+                    step="any"
+                    value="{{ play }}"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">
+                    Date <span class="text-muted">(Optional)</span>
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    class="form-control"
+                    value="{{ date }}"
+                >
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Calculate
+                </button>
+            </div>
+
+        </form>
+
+        {% if message %}
+        <div class="result-box mt-4">
+
+            <p id="resultMessage" class="mb-3">{{ message }}</p>
+
+            <button
+                type="button"
+                class="btn btn-success w-100"
+                onclick="copyMessage()"
+                id="copyButton"
+            >
+                Copy Message
+            </button>
+
+            <div id="copyStatus" class="text-success mt-2"
+                 role="status"></div>
+
+        </div>
+        {% endif %}
+
+        <div class="d-grid mt-3">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    async function copyMessage() {
+        const message = document.getElementById("resultMessage").innerText;
+        const status = document.getElementById("copyStatus");
+
+        try {
+            await navigator.clipboard.writeText(message);
+            status.textContent = "Message copied successfully!";
+        } catch (error) {
+            // Fallback for browsers that block clipboard access
+            const textarea = document.createElement("textarea");
+            textarea.value = message;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            const copied = document.execCommand("copy");
+            textarea.remove();
+
+            status.textContent = copied
+                ? "Message copied successfully!"
+                : "Unable to copy. Please copy the message manually.";
+        }
+    }
+</script>
+
+</body>
+</html>

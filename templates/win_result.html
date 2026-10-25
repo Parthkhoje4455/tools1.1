@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculation Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 50px;
+    }
+    .card {
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    h1 {
+      font-weight: 700;
+      color: #333;
+    }
+    .result-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    .result-item {
+      background: #f8f9fa;
+      border-left: 5px solid #0d6efd;
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+    .result-item:hover {
+      background: #e9f2ff;
+      transform: translateX(3px);
+    }
+    .error-item {
+      background: #fff5f5;
+      border-left: 5px solid #dc3545;
+      color: #dc3545;
+      font-weight: bold;
+    }
+    .error-item:hover {
+      background: #ffe5e5;
+    }
+    .total-box {
+      background: #0d6efd;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="card p-4">
+          <h1 class="text-center mb-4">*WIN*</h1>
+
+          <div class="result-list">
+            {% for line in mess %}
+              {% if line.strip() %}
+                {% if "Error" in line %}
+                  <div class="result-item error-item">{{ line }}</div>
+                {% else %}
+                  <div class="result-item">{{ line }}</div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="total-box">
+            Total: {{ total }}
+          </div>
+
+          <div class="d-grid mt-4">
+            <a href="{{ url_for('profit_loss', total=total) }}" class="btn btn-warning">Profit Loss</a>
+            <br>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">Back to Calculator</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

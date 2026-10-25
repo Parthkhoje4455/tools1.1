@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 350px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .dropdown select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            outline: none;
+            cursor: pointer;
+            background: #f9f9f9;
+            transition: 0.3s;
+        }
+        .dropdown select:hover {
+            border-color: #007bff;
+        }
+        .btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tools</h1>
+        <form id="toolForm">
+            <div class="dropdown">
+                <select id="toolSelect">
+                    <option value="">-- Select a Tool --</option>
+                    <option value="/win">Win Calculator</option>
+                    <option value="/message">Message Generator</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Go</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("toolForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const tool = document.getElementById("toolSelect").value;
+            if (tool) {
+                window.location.href = tool;
+            } else {
+                alert("Please select a tool first.");
+            }
+        });
+    </script>
+</body>
+</html>
