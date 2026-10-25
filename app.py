@@ -103,7 +103,8 @@ def profit_loss():
             play_amount = float(play)
 
             if date:
-                message += f"*{datetime.strptime(date, "%Y-%m-%d").strftime("%d-%m-%Y")}*\n"
+                formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d-%m-%Y")
+                message += f"*{formatted_date}*\n"
             com = play_amount * 0.06
             pl = play_amount - total - com
             message += f"*Play====={play}*\n*Win====={round(total)}*\n*Com====={round(com)}*\n"
