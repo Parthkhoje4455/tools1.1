@@ -65,8 +65,16 @@ def home():
 @app.route("/win", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        user_data = request.form["data"]
-        return redirect(url_for("result", data=user_data))
+        user_data = request.form.get("data", "")
+
+        mess, total = calculate(user_data)
+
+        return render_template(
+            "win_result.html",
+            mess=mess.splitlines(),
+            total=total
+        )
+
     return render_template("win_index.html")
 
 
