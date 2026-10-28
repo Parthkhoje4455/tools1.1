@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
+import random
+
 
 app = Flask(__name__)
 
@@ -54,6 +56,43 @@ def calculate(data):
             mess += f'{i} = {ans}\n'
 
     return mess, total
+
+# Message Slite
+def generate_results(amount, m_name):
+    teams = {
+        "team_a": {"ank": [], "pairs": [], "final_result": ""},
+        "team_b": {"ank": [], "pairs": [], "final_result": ""}
+    }
+
+    # Split digits 0-9 into two non-overlapping groups of three.
+    numbers = list(range(10))
+    teams["team_a"]["ank"] = random.sample(numbers, 3)
+    numbers = [n for n in numbers if n not in teams["team_a"]["ank"]]
+
+    teams["team_b"]["ank"] = random.sample(numbers, 3)
+    numbers = [n for n in numbers if n not in teams["team_b"]["ank"]]
+
+    # Create 40 pairs from the four remaining digits.
+    pairs = [f"{n}{i}" for n in numbers for i in range(10)]
+
+    # Randomly divide all 40 pairs between the two teams.
+    rnd_numb = random.randint(15, 25)
+    teams["team_a"]["pairs"] = random.sample(pairs, rnd_numb)
+    pairs = [p for p in pairs if p not in teams["team_a"]["pairs"]]
+    teams["team_b"]["pairs"] = random.sample(pairs, 40 - rnd_numb)
+
+    for key, value in teams.items():
+        lines = [m_name]
+        for ank in value["ank"]:
+            lines.append(f"{ank}={amount}")
+        for pair in value["pairs"]:
+            lines.append(f"{pair}={round(amount / 10)}")
+
+        total = round((len(value["pairs"]) * amount / 10) + (amount * 3))
+        lines.append(f"Total {total}")
+        value["final_result"] = "\n".join(lines)
+
+    return teams
 
 
 
@@ -111,8 +150,7 @@ def profit_loss():
             play_amount = float(play)
 
             if date:
-                formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d-%m-%Y")
-                message += f"*{formatted_date}*\n"
+                message += f"*{datetime.strptime(date, "%Y-%m-%d").strftime("%d-%m-%Y")}*\n"
             com = play_amount * 0.06
             pl = play_amount - total - com
             message += f"*Play====={play}*\n*Win====={round(total)}*\n*Com====={round(com)}*\n"
@@ -162,6 +200,37 @@ def message():
     return render_template("dp_index.html", message=mess)
 
 
+# Message Split
+@app.route("/split", methods=["GET", "POST"])
+def split():
+    error = None
+    results = None
+    market_name = ""
+    amount = ""
+
+    if request.method == "POST":
+        market_name = request.form.get("market_name", "").strip()
+        amount = request.form.get("amount", "").strip()
+
+        if not market_name:
+            error = "Please enter a market name."
+        else:
+            try:
+                amount_value = int(amount)
+                if amount_value <= 0:
+                    raise ValueError
+            except (ValueError, TypeError):
+                error = "Please enter a whole number greater than 0 for the amount."
+            else:
+                results = generate_results(amount_value, market_name)
+
+    return render_template(
+        "split.html",
+        error=error,
+        results=results,
+        market_name=market_name,
+        amount=amount
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
